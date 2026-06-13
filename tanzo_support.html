@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>TANZO お困りごと診断 | 鉄フライパンサポート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;          /* 紙白 */
+    --canvas:#f7f5f1;       /* 余白側のほんのり温かい白 */
+    --ink:#1c1b19;          /* 墨に近い黒 */
+    --ink-2:#57544e;        /* 副次テキスト */
+    --ink-3:#928e86;        /* 補助・ヒント */
+    --line:#e7e3db;         /* ヘアライン */
+    --surface:#f6f4ef;      /* カード面 */
+    --surface-2:#efece5;
+    --warn:#a85a30;         /* 焼き目のテラコッタ（注意・原因系） */
+    --warn-bg:#faf2ea;
+    --warn-line:#e6c8ab;
+    --safe:#46647d;         /* 焼き戻しの青（正常・安心系） */
+    --safe-bg:#eef1f4;
+    --safe-line:#c4d1db;
+    --radius:14px;
+    --sans:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{
+    font-family:var(--sans);
+    background:var(--canvas);
+    color:var(--ink);
+    line-height:1.9;
+    letter-spacing:.02em;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{
+    max-width:600px;margin:0 auto;min-height:100vh;min-height:100dvh;
+    background:var(--bg);display:flex;flex-direction:column;
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+  }
+  @media (min-width:640px){
+    .app{border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  }
+
+  /* ---------- ヘッダー ---------- */
+  header{
+    padding:calc(18px + env(safe-area-inset-top)) 22px 16px;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .logo-mark{
+    border:1.7px solid var(--ink);border-radius:40px;
+    padding:5px 16px 4px;font-weight:900;font-size:1.18rem;letter-spacing:.16em;
+    line-height:1;
+  }
+  .logo-sub{font-size:.5rem;letter-spacing:.34em;color:var(--ink-2);font-weight:500}
+  .tag{font-size:.7rem;color:var(--ink-3);letter-spacing:.16em;margin-top:6px;white-space:nowrap}
+
+  /* ---------- 進捗ライン（旧・火入れゲージ） ---------- */
+  .forge{
+    min-height:46px;padding:0 22px;display:none;align-items:center;gap:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .forge.show{display:flex}
+  .forge-label{font-size:.66rem;color:var(--ink-3);letter-spacing:.28em;white-space:nowrap}
+  .forge-bar{flex:1;height:2px;background:var(--line);overflow:hidden}
+  .forge-heat{
+    height:100%;width:0%;background:var(--ink);
+    transition:width .5s cubic-bezier(.3,.9,.3,1);
+  }
+
+  main{flex:1;padding:32px 22px 56px}
+
+  /* ---------- 共通：アイブロウ ---------- */
+  .eyebrow{
+    font-size:.7rem;letter-spacing:.32em;color:var(--ink-3);font-weight:500;
+    text-transform:uppercase;
+  }
+  .eyebrow.center{
+    display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:16px;
+  }
+  .eyebrow.center::before,.eyebrow.center::after{
+    content:"";width:24px;height:1px;background:var(--line);
+  }
+
+  /* ---------- ホーム ---------- */
+  .home .hero-q{
+    font-weight:900;font-size:clamp(1.7rem,6vw,2.15rem);line-height:1.45;
+    text-align:center;letter-spacing:.04em;
+  }
+  .home .hero-sub{
+    font-size:.86rem;color:var(--ink-2);text-align:center;margin:10px 0 30px;
+    letter-spacing:.04em;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media (min-width:560px){.grid{grid-template-columns:repeat(4,1fr)}}
+  .symptom{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 10px 16px;
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    cursor:pointer;min-height:120px;
+    transition:transform .12s ease,border-color .12s ease,background .12s ease;
+    text-align:center;color:var(--ink);font-family:var(--sans);
+  }
+  .symptom:active{transform:scale(.97)}
+  .symptom:hover,.symptom:focus-visible{border-color:var(--ink);background:var(--surface-2);outline:none}
+  .symptom svg{width:40px;height:40px;stroke:var(--ink);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .symptom .name{font-size:.9rem;font-weight:700;letter-spacing:.02em}
+
+  .sec-title{
+    margin:42px 0 16px;font-weight:700;font-size:.92rem;letter-spacing:.18em;
+    display:flex;align-items:center;gap:14px;color:var(--ink);
+  }
+  .sec-title::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .dish-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .dish{
+    background:var(--bg);border:1px solid var(--line);border-radius:999px;
+    color:var(--ink);font-size:.84rem;padding:13px 4px;cursor:pointer;
+    font-family:var(--sans);min-height:46px;font-weight:500;
+    transition:border-color .12s,background .12s,color .12s;
+  }
+  .dish:hover,.dish:focus-visible{border-color:var(--ink);background:var(--ink);color:var(--bg);outline:none}
+
+  /* ---------- 診断フロー ---------- */
+  .back{
+    background:none;border:none;color:var(--ink-3);font-size:.82rem;cursor:pointer;
+    padding:6px 0;margin-bottom:20px;display:inline-flex;align-items:center;gap:6px;
+    font-family:var(--sans);letter-spacing:.04em;
+  }
+  .back:hover{color:var(--ink)}
+  .q-eyebrow{font-size:.7rem;letter-spacing:.26em;color:var(--warn);margin-bottom:12px;font-weight:700}
+  .q-text{font-weight:900;font-size:clamp(1.45rem,5vw,1.85rem);line-height:1.5;margin-bottom:10px;letter-spacing:.03em}
+  .q-hint{font-size:.84rem;color:var(--ink-2);margin-bottom:26px}
+  .choices{display:flex;flex-direction:column;gap:12px}
+  .choice{
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    color:var(--ink);font-size:1rem;font-weight:700;text-align:left;
+    padding:18px 20px;min-height:60px;cursor:pointer;width:100%;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    font-family:var(--sans);transition:border-color .12s,background .12s,transform .12s;
+    letter-spacing:.02em;
+  }
+  .choice:active{transform:scale(.985)}
+  .choice:hover,.choice:focus-visible{border-color:var(--ink);background:var(--surface);outline:none}
+  .choice small{display:block;font-weight:400;font-size:.76rem;color:var(--ink-3);margin-top:3px}
+  .choice .arrow{color:var(--ink);flex-shrink:0;font-weight:400}
+
+  /* 写真診断 */
+  .photo-grid{display:grid;grid-template-columns:1fr;gap:14px}
+  @media (min-width:520px){.photo-grid{grid-template-columns:1fr 1fr}}
+  .photo-card{
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;cursor:pointer;text-align:left;width:100%;padding:0;
+    font-family:var(--sans);color:var(--ink);
+    transition:border-color .12s,transform .12s;
+  }
+  .photo-card:active{transform:scale(.985)}
+  .photo-card:hover,.photo-card:focus-visible{border-color:var(--ink);outline:none}
+  .photo-card svg{display:block;width:100%;height:120px;object-fit:cover}
+  .photo-card .pc-label{padding:13px 16px;font-size:.92rem;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  .pc-photo-note{font-size:.7rem;color:var(--ink-3);padding:0 16px 12px}
+
+  /* ---------- 結果 ---------- */
+  .verdict{
+    border-radius:var(--radius);padding:20px;margin-bottom:22px;border:1px solid;
+  }
+  .verdict.warn{background:var(--warn-bg);border-color:var(--warn-line)}
+  .verdict.normal{background:var(--safe-bg);border-color:var(--safe-line)}
+  .verdict .v-eyebrow{font-size:.68rem;letter-spacing:.26em;margin-bottom:8px;font-weight:700}
+  .verdict.warn .v-eyebrow{color:var(--warn)}
+  .verdict.normal .v-eyebrow{color:var(--safe)}
+  .verdict h2{font-weight:900;font-size:clamp(1.25rem,4.5vw,1.5rem);line-height:1.5;margin-bottom:10px;letter-spacing:.02em}
+  .verdict p{font-size:.9rem;color:var(--ink-2)}
+
+  .steps{counter-reset:s;display:flex;flex-direction:column;gap:12px;margin:20px 0 4px}
+  .step{
+    counter-increment:s;display:flex;gap:16px;align-items:flex-start;
+    background:var(--surface);border-radius:var(--radius);padding:16px 18px;
+    border:1px solid var(--line);
+  }
+  .step::before{
+    content:counter(s,decimal-leading-zero);
+    font-weight:700;font-size:.82rem;color:var(--ink);
+    border:1px solid var(--ink);border-radius:50%;
+    width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    letter-spacing:0;
+  }
+  .step b{display:block;font-size:.96rem;font-weight:700;margin-bottom:2px;letter-spacing:.02em}
+  .step span{font-size:.84rem;color:var(--ink-2)}
+
+  .video{
+    margin:22px 0;border-radius:var(--radius);overflow:hidden;position:relative;
+    background:var(--surface-2);border:1px solid var(--line);
+    aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;
+    cursor:pointer;
+  }
+  .video .play{
+    width:54px;height:54px;border-radius:50%;background:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .video .play::after{content:"";border-left:16px solid var(--bg);border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px}
+  .video .v-title{font-size:.82rem;color:var(--ink-3);letter-spacing:.04em}
+
+  .prevent{
+    background:transparent;border:1px dashed var(--line);border-radius:var(--radius);
+    padding:18px;margin-top:8px;
+  }
+  .prevent h3{font-size:.7rem;letter-spacing:.22em;color:var(--ink-3);margin-bottom:10px;font-weight:700;text-transform:uppercase}
+  .prevent ul{list-style:none}
+  .prevent li{font-size:.86rem;padding:5px 0 5px 1.4em;position:relative;color:var(--ink-2)}
+  .prevent li::before{content:"";position:absolute;left:2px;top:1.05em;width:5px;height:5px;border-radius:50%;background:var(--ink)}
+
+  .resolve-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+  .btn{
+    border-radius:var(--radius);padding:16px 10px;font-size:.94rem;font-weight:700;cursor:pointer;
+    font-family:var(--sans);min-height:56px;border:1px solid transparent;letter-spacing:.04em;
+    transition:transform .12s,opacity .12s,background .12s,color .12s,border-color .12s;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn-ok{background:var(--ink);color:var(--bg)}
+  .btn-ok:hover{opacity:.88}
+  .btn-ng{background:var(--bg);border-color:var(--line);color:var(--ink)}
+  .btn-ng:hover{border-color:var(--ink)}
+  .btn-wide{width:100%;margin-top:14px}
+
+  /* 解決画面 */
+  .done{text-align:center;padding:56px 0}
+  .done .mark{
+    width:80px;height:80px;margin:0 auto 22px;border-radius:50%;
+    border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;
+  }
+  .done .mark svg{width:38px;height:38px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .done h2{font-weight:900;font-size:clamp(1.3rem,5vw,1.55rem);margin-bottom:12px;letter-spacing:.02em}
+  .done p{font-size:.88rem;color:var(--ink-2);margin-bottom:32px}
+
+  /* 問い合わせ */
+  .form{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+  .field label{display:block;font-size:.76rem;color:var(--ink-3);margin-bottom:7px;letter-spacing:.06em}
+  .field input,.field textarea,.field select{
+    width:100%;background:var(--bg);border:1px solid var(--line);
+    border-radius:10px;color:var(--ink);font-size:1rem;padding:14px;
+    font-family:var(--sans);
+  }
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--ink)}
+  .field input[readonly]{background:var(--surface);color:var(--ink-2)}
+  .field textarea{min-height:110px;resize:vertical;line-height:1.7}
+  .attach{
+    border:1px dashed var(--line);border-radius:10px;padding:18px;
+    text-align:center;font-size:.84rem;color:var(--ink-3);cursor:pointer;background:none;width:100%;
+    font-family:var(--sans);transition:border-color .12s,color .12s;
+  }
+  .attach:hover{border-color:var(--ink);color:var(--ink)}
+  .note{font-size:.74rem;color:var(--ink-3);line-height:1.7}
+
+  /* 料理ガイド */
+  .dish-head{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+  .dish-head h2{font-weight:900;font-size:clamp(1.4rem,5vw,1.7rem);letter-spacing:.02em}
+  .dish-head .fire{
+    font-size:.7rem;letter-spacing:.06em;color:var(--ink-2);font-weight:500;
+    border:1px solid var(--line);border-radius:999px;padding:5px 13px;white-space:nowrap;
+  }
+  .kotsu{
+    background:var(--warn-bg);border-left:2px solid var(--warn);
+    padding:16px 18px;border-radius:0 10px 10px 0;margin-top:20px;
+  }
+  .kotsu b{display:block;font-size:.68rem;letter-spacing:.22em;color:var(--warn);margin-bottom:5px;font-weight:700;text-transform:uppercase}
+  .kotsu p{font-size:.9rem;color:var(--ink-2)}
+
+  footer{
+    padding:24px 22px calc(24px + env(safe-area-inset-bottom));
+    text-align:center;font-size:.68rem;color:var(--ink-3);
+    border-top:1px solid var(--line);letter-spacing:.1em;line-height:1.9;
+  }
+
+  .fade{animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo-mark">TANZO</div>
+      <div class="logo-sub">MADE IN JAPAN</div>
+    </div>
+    <div class="tag">鉄フライパンサポート</div>
+  </header>
+
+  <div class="forge" id="forge">
+    <span class="forge-label">解決まで</span>
+    <div class="forge-bar"><div class="forge-heat" id="forgeHeat"></div></div>
+  </div>
+
+  <main id="main"></main>
+
+  <footer>一生モノの鉄、一生モノのサポート。<br>TANZO / YAMACO Co., Ltd.（プロトタイプ）</footer>
+</div>
+
+<script>
+/* =========================================================
+   診断データ（管理画面ではこのJSONを編集する想定）
+   node種別: question / photo / result / dish / contact
+========================================================= */
+const ICONS = {
+  koge:'<svg viewBox="0 0 24 24"><circle cx="11" cy="13" r="7"/><path d="M18 13h4"/><circle cx="9" cy="12" r=".6" fill="currentColor"/><circle cx="13" cy="14" r=".6" fill="currentColor"/><circle cx="11" cy="16" r=".6" fill="currentColor"/></svg>',
+  kuttsuku:'<svg viewBox="0 0 24 24"><circle cx="11" cy="14" r="7"/><path d="M18 14h4"/><path d="M9 11 l2 -4 l2 4"/></svg>',
+  sabi:'<svg viewBox="0 0 24 24"><path d="M12 3 C9 8 6 10 6 14 a6 6 0 0 0 12 0 c0-4-3-6-6-11z"/><circle cx="10" cy="14" r=".6" fill="currentColor"/><circle cx="14" cy="15" r=".6" fill="currentColor"/></svg>',
+  henshoku:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4 a8 8 0 0 1 0 16z" fill="currentColor" stroke="none" opacity=".4"/></svg>',
+  arai:'<svg viewBox="0 0 24 24"><path d="M4 14 q4 -3 8 0 t8 0"/><path d="M4 18 q4 -3 8 0 t8 0"/><circle cx="8" cy="7" r="1.6"/><circle cx="14" cy="5" r="1.2"/></svg>',
+  hokan:'<svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="1.5"/><path d="M4 12 h16 M9 8 V5 h6 v3"/></svg>',
+  hikagen:'<svg viewBox="0 0 24 24"><path d="M12 3 C9 8 7 9.5 7 13.5 a5 5 0 0 0 10 0 C17 9.5 15 8 12 3z"/><path d="M12 12 c-1.2 1.4-1.8 2.2-1.8 3.4a1.8 1.8 0 0 0 3.6 0 c0-1.2-.6-2-1.8-3.4z"/></svg>',
+  ryori:'<svg viewBox="0 0 24 24"><path d="M7 3 v7 M5 3 v4 M9 3 v4 M7 10 v11"/><path d="M16 3 c-2 0-3 2-3 5 0 2 1 3 3 3 v10 M16 3 v8"/></svg>',
+  check:'<svg viewBox="0 0 24 24"><path d="M4 12.5 l5 5 L20 6.5"/></svg>'
+};
+
+/* 写真診断用の状態スウォッチ（実装時は実写真に差し替え） */
+function panSwatch(kind){
+  const base='<rect width="400" height="110" fill="#1c1d1f"/><ellipse cx="200" cy="55" rx="150" ry="42" fill="URFACE" stroke="#0d0d0e" stroke-width="6"/>';
+  const dots=(c,n,seed)=>{let s='';for(let i=0;i<n;i++){const x=110+((seed*i*37)%180),y=30+((seed*i*53)%48);s+=`<circle cx="${x}" cy="${y}" r="${2+((i*seed)%3)}" fill="${c}" opacity=".85"/>`}return s};
+  const m={
+    rust_spots: base.replace('URFACE','#33342f')+dots('#a3502a',14,7),
+    rust_full:  base.replace('URFACE','#7a4226')+dots('#9c5a32',20,5),
+    black_spots:base.replace('URFACE','#2b2c2a')+dots('#111',10,9),
+    blue:       base.replace('URFACE','url(#g1)')+'<defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a4a5c"/><stop offset=".5" stop-color="#5c4a6a"/><stop offset="1" stop-color="#3c3d3a"/></linearGradient></defs>',
+    white:      base.replace('URFACE','#55564f')+'<ellipse cx="200" cy="55" rx="90" ry="24" fill="#8d8e85" opacity=".55"/>',
+    patchy:     base.replace('URFACE','#3a352c')+dots('#7a4a2a',8,11)+'<ellipse cx="160" cy="50" rx="40" ry="14" fill="#5c4530" opacity=".6"/>'
+  };
+  return `<svg viewBox="0 0 400 110" preserveAspectRatio="xMidYMid slice">${m[kind]}</svg>`;
+}
+
+const FLOW = {
+  /* ---- 焦げ付く ---- */
+  koge_q1:{type:'question',eyebrow:'焦げ付く',depth:1,total:3,
+    q:'いつから焦げ付きますか？',
+    choices:[
+      {label:'使い始めから焦げ付く',next:'koge_q2'},
+      {label:'最近、焦げ付くようになった',sub:'以前は問題なかった',next:'koge_r_reset'}
+    ]},
+  koge_q2:{type:'question',eyebrow:'焦げ付く',depth:2,total:3,
+    q:'調理の前に「油返し」をしていますか？',
+    hint:'油返し＝予熱後に多めの油を全体になじませ、余分を戻す工程',
+    choices:[
+      {label:'している',next:'koge_r_yonetsu'},
+      {label:'していない・知らなかった',next:'koge_r_abura'}
+    ]},
+  koge_r_abura:{type:'result',depth:3,total:3,kind:'warn',eyebrow:'原因がわかりました',
+    title:'油返し不足が原因です',
+    desc:'鉄フライパンは油の膜で食材を守ります。毎回の油返しで、表面がコーティングのように働きます。',
+    steps:[
+      ['中火で予熱する','フライパンから薄く煙が立つまで（約1〜2分）'],
+      ['油を大さじ3入れる','全体に回して鍋肌になじませる'],
+      ['余分な油を戻す','オイルポットへ。鍋肌がしっとり光ればOK'],
+      ['調理用の油を入れて調理開始','']
+    ],
+    video:'動画：油返しのやり方（45秒）',
+    prevent:['調理のたびに油返しをする','予熱は中火で。強火は焦げの原因','使用後はお湯とタワシで洗い、火にかけて乾燥']},
+  koge_r_yonetsu:{type:'result',depth:3,total:3,kind:'warn',eyebrow:'原因がわかりました',
+    title:'予熱不足、または火力が強すぎます',
+    desc:'TANZOは熱伝導が高い鍛造鉄。一般の鉄フライパンより少ない火力で十分です。',
+    steps:[
+      ['中火で1〜2分予熱','水滴を落として、玉になって転がれば適温'],
+      ['調理は弱火〜中火で','強火は使わない。余熱で火が通ります'],
+      ['食材は常温に戻してから','冷たい食材は温度を急に下げ、焦げ付きの原因に']
+    ],
+    video:'動画：水滴テストで適温を見極める（30秒）',
+    prevent:['「予熱は中火・調理は弱火」を合言葉に','焦げそうなときは火を弱めるより一度外す']},
+  koge_r_reset:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'原因がわかりました',
+    title:'古い油膜や焦げが炭化しています',
+    desc:'積み重なった焦げが表面に残ると、新しい焦げ付きを呼びます。一度リセットしましょう。鉄は何度でも再生できます。',
+    steps:[
+      ['お湯を沸かして焦げをふやかす','水を1/3ほど入れ、5分沸騰させる'],
+      ['タワシでこすり落とす','金属ヘラを使ってもOK。鉄は傷を恐れなくて大丈夫'],
+      ['空焼きして完全に乾かす','中火で水気を飛ばす'],
+      ['油ならしをする','油大さじ3を全体になじませて完了']
+    ],
+    video:'動画：焦げのリセット方法（1分20秒）',
+    prevent:['使用後は汚れをためずその日のうちに洗う','月1回の油ならしで表面を育てる']},
+
+  /* ---- くっつく ---- */
+  kuttsuku_q1:{type:'question',eyebrow:'くっつく',depth:1,total:2,
+    q:'何がくっつきますか？',
+    choices:[
+      {label:'卵・チャーハン',next:'kuttsuku_r_tamago'},
+      {label:'肉・魚',next:'kuttsuku_r_niku'},
+      {label:'餃子',next:'dish_gyoza'},
+      {label:'なんでもくっつく',next:'koge_r_abura'}
+    ]},
+  kuttsuku_r_tamago:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'原因がわかりました',
+    title:'温度と油が足りていません',
+    desc:'卵やご飯は、温度が低いと鉄の表面に張り付きます。「しっかり予熱・油やや多め・入れたら少し待つ」が鉄則です。',
+    steps:[
+      ['中火でしっかり予熱','水滴がコロコロ転がる温度まで'],
+      ['油返しをしてから油を多めに','卵料理は油が命'],
+      ['食材を入れたら10秒待つ','すぐ動かすと張り付きます。膜ができれば自然に動く']
+    ],
+    video:'動画：くっつかない卵焼きの火入れ（50秒）',
+    prevent:['卵料理ガイドもチェック','油は「ちょっと多いかな」が適量'],
+    link:{label:'卵料理ガイドを見る',next:'dish_tamago'}},
+  kuttsuku_r_niku:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'原因がわかりました',
+    title:'動かすのが早すぎます',
+    desc:'肉や魚は焼き始めに一度フライパンに付き、焼き面が固まると自然に剥がれます。剥がれるまで待つのがコツです。',
+    steps:[
+      ['予熱と油返しをする','中火1〜2分＋油返し'],
+      ['食材を置いたら触らない','1分半〜2分。動かしたくなっても我慢'],
+      ['自然に剥がれたら裏返す','フライパンを揺すって動けばOKのサイン']
+    ],
+    video:'動画：肉が剥がれる瞬間の見極め（40秒）',
+    prevent:['食材は常温に戻し、水気をふき取ってから','詰め込みすぎると温度が下がりくっつきます']},
+
+  /* ---- サビ（写真診断） ---- */
+  sabi_q1:{type:'photo',eyebrow:'サビが出た',depth:1,total:2,
+    q:'いちばん近い状態を選んでください',
+    choices:[
+      {label:'点々と茶色いサビ',swatch:'rust_spots',next:'sabi_r_light'},
+      {label:'全体が赤茶色',swatch:'rust_full',next:'sabi_r_heavy'},
+      {label:'黒い斑点・黒ずみ',swatch:'black_spots',next:'sabi_r_normal'}
+    ]},
+  sabi_r_light:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'軽度のサビです',
+    title:'こすって油を塗れば、すぐ復活します',
+    desc:'水分が残ったまま保管したときに出る初期サビです。心配いりません。',
+    steps:[
+      ['お湯とタワシでこすり落とす','クレンザーを使うと早い'],
+      ['火にかけて完全に乾燥','中火で水気がなくなるまで'],
+      ['油を薄く全体に塗る','キッチンペーパーでうすく']
+    ],
+    video:'動画：軽いサビの落とし方（40秒）',
+    prevent:['洗ったら必ず火にかけて乾燥','保管前に薄く油を塗る']},
+  sabi_r_heavy:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'しっかりめのサビです',
+    title:'再生できます。鉄は一生モノです',
+    desc:'全体に広がったサビも、削って油をなじませ直せば新品同様に戻ります。買い替え不要です。',
+    steps:[
+      ['金タワシ＋クレンザーで削り落とす','地金（銀色）が見えるまでしっかり'],
+      ['よく洗い流して空焼き','中火〜強めの中火で水分を完全に飛ばす'],
+      ['油ならしをする','油大さじ3を全体になじませ、冷めたら拭き取る'],
+      ['くず野菜を炒める','鉄のにおいが取れ、油膜が定着します']
+    ],
+    video:'動画：サビたフライパンの完全再生（2分10秒）',
+    prevent:['使用後の自然乾燥に頼らず、必ず火にかける','長期保管は油を厚めに塗り、紙に包む']},
+  sabi_r_normal:{type:'result',depth:2,total:2,kind:'normal',eyebrow:'ご安心ください',
+    title:'それはサビではなく「育った証」です',
+    desc:'黒い斑点や黒ずみは、油膜と酸化被膜が育ってできるもの。鉄フライパンが使いやすくなっているサインで、調理にも健康にも問題ありません。',
+    steps:[
+      ['そのまま使い続けてOK','黒ずみは焦げ付きにくさの素'],
+      ['気になる場合だけタワシでこする','無理に落とす必要はありません']
+    ],
+    video:'動画：鉄が「育つ」とは？（1分）',
+    prevent:['黒ずみは落とさず育てるのがおすすめ']},
+
+  /* ---- 変色（写真診断） ---- */
+  henshoku_q1:{type:'photo',eyebrow:'変色した',depth:1,total:2,
+    q:'いちばん近い色を選んでください',
+    choices:[
+      {label:'青っぽい・虹色',swatch:'blue',next:'henshoku_r_blue'},
+      {label:'白っぽくかすれた',swatch:'white',next:'henshoku_r_white'},
+      {label:'まだらな茶色',swatch:'patchy',next:'sabi_q1'}
+    ]},
+  henshoku_r_blue:{type:'result',depth:2,total:2,kind:'normal',eyebrow:'ご安心ください',
+    title:'正常です。鉄が強くなった証拠です',
+    desc:'青や虹色の変色は、熱で酸化被膜ができたもの。サビを防ぐ天然のバリアで、むしろ良い状態です。',
+    steps:[['そのままお使いください','使い込むほど色は深く、表面は強くなります']],
+    video:'動画：鉄の色が変わる理由（50秒）',
+    prevent:['色ムラは個性。気にせず使い込んでください']},
+  henshoku_r_white:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'お手入れのサインです',
+    title:'油膜が落ちています',
+    desc:'洗剤での洗いすぎや空焼きのしすぎで油膜が薄くなった状態。油ならしで戻ります。',
+    steps:[
+      ['中火で予熱する',''],
+      ['油大さじ3を全体になじませる','鍋肌までしっかり'],
+      ['火を止めて冷まし、油を拭き取る','']
+    ],
+    video:'動画：油ならしのやり方（1分）',
+    prevent:['ふだんの洗いはお湯とタワシで（洗剤は基本不要）','洗剤を使ったら油ならしをセットで']},
+
+  /* ---- 直接回答系 ---- */
+  arai_r:{type:'result',depth:1,total:1,kind:'normal',eyebrow:'お手入れの基本',
+    title:'お湯とタワシで洗い、火にかけて乾かす',
+    desc:'洗剤は基本不要です。油膜は鉄フライパンの味方なので、落としすぎないのがコツです。',
+    steps:[
+      ['調理後、温かいうちにお湯で洗う','タワシやササラでこする。洗剤は使わない'],
+      ['火にかけて水気を完全に飛ばす','中火で30秒〜1分'],
+      ['薄く油を塗って保管','キッチンペーパーでうすくのばす']
+    ],
+    video:'動画：毎日のお手入れ 3ステップ（55秒）',
+    prevent:['食洗機・つけ置きはNG（サビの原因）','におい移りが気になるときだけ洗剤OK。その後は油ならしを']},
+  hokan_r:{type:'result',depth:1,total:1,kind:'normal',eyebrow:'保管の基本',
+    title:'「完全乾燥＋薄く油」で保管します',
+    desc:'サビの原因は水分と湿気だけ。この2つを断てば、何年でも良い状態を保てます。',
+    steps:[
+      ['火にかけて完全に乾燥','自然乾燥に頼らない'],
+      ['薄く油を塗る','全体にうすく。ベタつくほどは不要'],
+      ['湿気の少ない場所へ','シンク下に置く場合は新聞紙や紙で包む']
+    ],
+    video:'動画：正しい保管方法（40秒）',
+    prevent:['長期間使わないときは油を厚めに塗り、紙に包む','久しぶりに使う前は油返しから']},
+  hikagen_r:{type:'result',depth:1,total:1,kind:'normal',eyebrow:'火加減の基本',
+    title:'予熱は中火、調理は弱火〜中火',
+    desc:'TANZOは鍛造ならではの高い熱伝導と保温力があります。一般の鉄フライパンより弱い火で、十分に火が通ります。',
+    steps:[
+      ['予熱：中火で1〜2分','水滴を落として、玉になって転がれば適温'],
+      ['調理：弱火〜中火','強火は焦げと油の劣化の原因'],
+      ['仕上げ：余熱を使う','火を止めても熱が続きます。余熱で火入れを']
+    ],
+    video:'動画：TANZOの火加減・水滴テスト（45秒）',
+    prevent:['強火が必要なのはチャーハンの仕上げ程度','省エネ・時短にもつながります']},
+
+  /* ---- 料理がうまくできない → 料理選択 ---- */
+  ryori_q1:{type:'question',eyebrow:'料理がうまくできない',depth:1,total:1,
+    q:'どの料理ですか？',
+    choices:[
+      {label:'卵料理',next:'dish_tamago'},
+      {label:'ステーキ',next:'dish_steak'},
+      {label:'ハンバーグ',next:'dish_hamburg'},
+      {label:'餃子',next:'dish_gyoza'},
+      {label:'チャーハン',next:'dish_chahan'},
+      {label:'野菜炒め',next:'dish_yasai'}
+    ]},
+
+  /* ---- 料理別ガイド ---- */
+  dish_tamago:{type:'dish',name:'卵料理',fire:'予熱：中火 → 調理：弱火',
+    steps:[
+      ['中火で予熱＋油返し','卵は温度が命。ここを省くとくっつきます'],
+      ['油を多めにひき、弱火に落とす','油の表面が静かに波打つくらい'],
+      ['卵を入れて10秒待つ','膜ができたら自然に動きます']
+    ],
+    kotsu:'油は「少し多いかな」が適量。鉄からの自然な鉄分も一緒に摂れます。',
+    video:'動画：ふわとろ卵の火入れ（1分）'},
+  dish_steak:{type:'dish',name:'ステーキ',fire:'予熱：強めの中火 → 調理：中火＋余熱',
+    steps:[
+      ['肉を常温に戻し、水気をふく','冷たいままだと温度が落ちて張り付きます'],
+      ['しっかり予熱して油返し','煙が薄く立つまで'],
+      ['置いたら1分半、触らない','自然に剥がれたら裏返すサイン'],
+      ['火を止めて余熱で休ませる','鍛造鉄の保温力で中までジューシーに']
+    ],
+    kotsu:'TANZOの保温力なら、厚い肉ほど差が出ます。取っ手を外してそのまま食卓へ。',
+    video:'動画：鍛造フライパンでステーキ（1分30秒）'},
+  dish_hamburg:{type:'dish',name:'ハンバーグ',fire:'焼き色：中火 → 蒸し焼き：弱火',
+    steps:[
+      ['中火＋油返しで両面に焼き色','片面2分ずつ、動かさない'],
+      ['弱火にしてガラス蓋をする','密着する蓋で蒸気を閉じ込めて5〜6分'],
+      ['竹串で透明な肉汁を確認','余熱で1〜2分休ませて完成']
+    ],
+    kotsu:'TANZOの高精度な蓋の密着性で、水を足さなくてもふっくら蒸し焼きに。',
+    video:'動画：蓋を活かしたハンバーグ（1分20秒）'},
+  dish_gyoza:{type:'dish',name:'餃子',fire:'予熱：中火 → 蒸し：弱火 → 仕上げ：中火',
+    steps:[
+      ['中火で予熱＋油返し','ここを省くと皮が張り付きます'],
+      ['餃子を並べ、すぐ熱湯を注ぐ','底から1/3の高さまで。蓋をして弱火'],
+      ['水気が飛んだら油を回しかけ','中火に上げて、底をカリッと'],
+      ['ヘラで底からはがす','鉄は金属ヘラOK。一気にいきましょう']
+    ],
+    kotsu:'差すのは水ではなく熱湯。温度が下がらず、皮がべちゃつきません。',
+    video:'動画：羽根つき餃子の焼き方（1分40秒）'},
+  dish_chahan:{type:'dish',name:'チャーハン',fire:'予熱：しっかり → 調理：強めの中火・短時間',
+    steps:[
+      ['しっかり予熱＋油返し','チャーハンだけは高温で'],
+      ['油多め→卵→すぐご飯','温かいご飯を使うのがパラパラへの近道'],
+      ['あおらず、広げて焼く','ヘラで切るように混ぜ、お米を鍋肌に当てる']
+    ],
+    kotsu:'家庭の火力では「あおる」より「焼き付ける」。鍛造鉄の蓄熱が香ばしさを作ります。',
+    video:'動画：パラパラチャーハンの理屈（1分30秒）'},
+  dish_yasai:{type:'dish',name:'野菜炒め',fire:'予熱：中火 → 調理：強めの中火・短時間',
+    steps:[
+      ['野菜の水気をよく切る','水分は「べちゃっ」の最大の原因'],
+      ['予熱＋油返しのあと、一気に炒める','火の通りにくいものから順に'],
+      ['詰め込みすぎない','フライパンの2/3まで。多いときは2回に分ける']
+    ],
+    kotsu:'蓄熱が高いTANZOは食材を入れても温度が落ちにくく、シャキッと仕上がります。',
+    video:'動画：シャキシャキ野菜炒め（1分）'}
+};
+
+const SYMPTOMS = [
+  {icon:'koge',name:'焦げ付く',next:'koge_q1'},
+  {icon:'kuttsuku',name:'くっつく',next:'kuttsuku_q1'},
+  {icon:'sabi',name:'サビが出た',next:'sabi_q1'},
+  {icon:'henshoku',name:'変色した',next:'henshoku_q1'},
+  {icon:'arai',name:'洗い方',next:'arai_r'},
+  {icon:'hokan',name:'保管方法',next:'hokan_r'},
+  {icon:'hikagen',name:'火加減',next:'hikagen_r'},
+  {icon:'ryori',name:'料理がうまくできない',next:'ryori_q1'}
+];
+const DISHES = [
+  ['卵料理','dish_tamago'],['ステーキ','dish_steak'],['ハンバーグ','dish_hamburg'],
+  ['餃子','dish_gyoza'],['チャーハン','dish_chahan'],['野菜炒め','dish_yasai']
+];
+
+/* ====================== 画面制御 ====================== */
+const main=document.getElementById('main');
+const forge=document.getElementById('forge');
+const heat=document.getElementById('forgeHeat');
+let history=[];
+let currentSymptom='';
+
+function setHeat(depth,total){
+  forge.classList.add('show');
+  heat.style.width=Math.round((depth/total)*100)+'%';
+}
+function hideHeat(){forge.classList.remove('show');heat.style.width='0%'}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+
+function go(id,push=true){
+  if(push)history.push(id);
+  const node=FLOW[id];
+  if(id==='home')return renderHome();
+  if(id==='contact')return renderContact();
+  if(id==='done')return renderDone();
+  if(node.type==='question')return renderQuestion(node);
+  if(node.type==='photo')return renderPhoto(node);
+  if(node.type==='result')return renderResult(node);
+  if(node.type==='dish')return renderDish(node);
+}
+function back(){
+  history.pop();
+  const prev=history[history.length-1]||'home';
+  go(prev,false);
+  window.scrollTo(0,0);
+}
+function home(){history=['home'];currentSymptom='';hideHeat();renderHome();window.scrollTo(0,0)}
+
+function backBtn(){return `<button class="back" onclick="back()">← もどる</button>`}
+
+function renderHome(){
+  hideHeat();
+  main.innerHTML=`
+  <div class="fade home">
+    <p class="eyebrow center">TANZO SUPPORT</p>
+    <h1 class="hero-q">どうされましたか？</h1>
+    <p class="hero-sub">困りごとを選ぶだけ。平均3分で解決へご案内します。</p>
+    <div class="grid">
+      ${SYMPTOMS.map((s,i)=>`
+        <button class="symptom" onclick="startFlow('${s.next}','${s.name}')">
+          ${ICONS[s.icon]}
+          <span class="name">${s.name}</span>
+        </button>`).join('')}
+    </div>
+    <h2 class="sec-title">料理別ガイド</h2>
+    <div class="dish-row">
+      ${DISHES.map(d=>`<button class="dish" onclick="startFlow('${d[1]}','料理別ガイド')">${d[0]}</button>`).join('')}
+    </div>
+  </div>`;
+}
+function startFlow(next,name){
+  currentSymptom=name;
+  history=['home'];
+  go(next);
+  window.scrollTo(0,0);
+}
+
+function renderQuestion(n){
+  setHeat(n.depth,n.total);
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <p class="q-eyebrow">${n.eyebrow}</p>
+    <h1 class="q-text">${n.q}</h1>
+    ${n.hint?`<p class="q-hint">${n.hint}</p>`:''}
+    <div class="choices">
+      ${n.choices.map(c=>`
+        <button class="choice" onclick="go('${c.next}');window.scrollTo(0,0)">
+          <span>${c.label}${c.sub?`<small>${c.sub}</small>`:''}</span>
+          <span class="arrow">→</span>
+        </button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderPhoto(n){
+  setHeat(n.depth,n.total);
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <p class="q-eyebrow">${n.eyebrow}・写真診断</p>
+    <h1 class="q-text">${n.q}</h1>
+    <div class="photo-grid">
+      ${n.choices.map(c=>`
+        <button class="photo-card" onclick="go('${c.next}');window.scrollTo(0,0)">
+          ${panSwatch(c.swatch)}
+          <span class="pc-label">${c.label}<span class="arrow">→</span></span>
+        </button>`).join('')}
+    </div>
+    <p class="pc-photo-note" style="padding:14px 2px 0">※プロトタイプではイラスト表示。本番は実物写真に差し替え。</p>
+  </div>`;
+}
+
+function renderResult(n){
+  setHeat(n.depth,n.total);
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <div class="verdict ${n.kind}">
+      <p class="v-eyebrow">${n.eyebrow}</p>
+      <h2>${n.title}</h2>
+      <p>${n.desc}</p>
+    </div>
+    <div class="steps">
+      ${n.steps.map(s=>`<div class="step"><div><b>${s[0]}</b>${s[1]?`<span>${s[1]}</span>`:''}</div></div>`).join('')}
+    </div>
+    <div class="video" role="button" aria-label="${n.video}">
+      <div class="play"></div>
+      <span class="v-title">${n.video}</span>
+    </div>
+    <div class="prevent">
+      <h3>再発を防ぐには</h3>
+      <ul>${n.prevent.map(p=>`<li>${p}</li>`).join('')}</ul>
+    </div>
+    ${n.link?`<button class="btn btn-ng btn-wide" onclick="go('${n.link.next}');window.scrollTo(0,0)">${n.link.label} →</button>`:''}
+    <div class="resolve-row">
+      <button class="btn btn-ok" onclick="go('done');window.scrollTo(0,0)">解決した！</button>
+      <button class="btn btn-ng" onclick="go('contact');window.scrollTo(0,0)">解決しなかった</button>
+    </div>
+  </div>`;
+}
+
+function renderDish(n){
+  setHeat(1,1);
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <div class="dish-head">
+      <h2>${n.name}</h2>
+      <span class="fire">${n.fire}</span>
+    </div>
+    <div class="steps">
+      ${n.steps.map(s=>`<div class="step"><div><b>${s[0]}</b>${s[1]?`<span>${s[1]}</span>`:''}</div></div>`).join('')}
+    </div>
+    <div class="video" role="button" aria-label="${n.video}">
+      <div class="play"></div>
+      <span class="v-title">${n.video}</span>
+    </div>
+    <div class="kotsu"><b>TANZOのコツ</b><p>${n.kotsu}</p></div>
+    <div class="resolve-row">
+      <button class="btn btn-ok" onclick="go('done');window.scrollTo(0,0)">参考になった！</button>
+      <button class="btn btn-ng" onclick="go('contact');window.scrollTo(0,0)">解決しなかった</button>
+    </div>
+  </div>`;
+}
+
+function renderDone(){
+  hideHeat();
+  main.innerHTML=`
+  <div class="done fade">
+    <div class="mark">${ICONS.check}</div>
+    <h2>解決できてよかったです</h2>
+    <p>鉄は使うほど育ちます。<br>これからも一生モノの鉄を、気兼ねなく。</p>
+    <button class="btn btn-ok btn-wide" onclick="home()">最初の画面にもどる</button>
+  </div>`;
+}
+
+function renderContact(){
+  hideHeat();
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <p class="q-eyebrow">お問い合わせ</p>
+    <h1 class="q-text">スタッフが直接お答えします</h1>
+    <p class="q-hint">診断の内容は自動で引き継がれます。写真を添えていただくと、より早く正確にご案内できます。</p>
+    <div class="form">
+      <div class="field">
+        <label>お困りの内容（自動入力）</label>
+        <input type="text" value="${esc(currentSymptom||'')}" readonly>
+      </div>
+      <div class="field">
+        <label>お名前</label>
+        <input type="text" placeholder="例：山田 花子">
+      </div>
+      <div class="field">
+        <label>メールアドレス</label>
+        <input type="email" placeholder="例：hanako@example.com">
+      </div>
+      <div class="field">
+        <label>状況を教えてください（任意）</label>
+        <textarea placeholder="例：油返しをしても卵がくっつきます"></textarea>
+      </div>
+      <button class="attach" type="button">＋ フライパンの写真を添付（タップで撮影）</button>
+      <button class="btn btn-ok btn-wide" type="button" onclick="alert('プロトタイプのため送信されません。本番ではここで送信→自動返信メール。')">送信する</button>
+      <p class="note">2営業日以内にメールでご返信します。診断履歴（${history.filter(h=>h!=='home').length}ステップ）が問い合わせに添付されるため、状況説明の手間が省けます。</p>
+    </div>
+  </div>`;
+}
+
+home();
+</script>
+</body>
+</html>
