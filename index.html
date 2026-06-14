@@ -53,7 +53,7 @@
     display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
     border-bottom:1px solid var(--line);
   }
-  .brand{display:flex;flex-direction:column;align-items:center;gap:4px}
+  .brand{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
   .logo-mark{
     border:1.7px solid var(--ink);border-radius:40px;
     padding:5px 16px 4px;font-weight:900;font-size:1.18rem;letter-spacing:.16em;
@@ -62,7 +62,7 @@
   .logo-sub{font-size:.5rem;letter-spacing:.34em;color:var(--ink-2);font-weight:500}
   .tag{font-size:.7rem;color:var(--ink-3);letter-spacing:.16em;margin-top:6px;white-space:nowrap}
 
-  /* ---------- 進捗ライン（旧・火入れゲージ） ---------- */
+  /* ---------- 進捗ライン ---------- */
   .forge{
     min-height:46px;padding:0 22px;display:none;align-items:center;gap:14px;
     border-bottom:1px solid var(--line);
@@ -89,7 +89,17 @@
     content:"";width:24px;height:1px;background:var(--line);
   }
 
-  /* ---------- ホーム ---------- */
+  /* ---------- ホーム：はじめての方へ（白・画像2スタイル） ---------- */
+  .feature{margin-bottom:38px}
+  .feature .page-title{font-size:clamp(1.45rem,5.4vw,1.8rem);margin-bottom:14px}
+  .feature .lead{margin-bottom:20px}
+  .more-btn{
+    display:inline-flex;align-items:center;gap:10px;border:1px solid var(--ink);background:none;
+    color:var(--ink);font-family:var(--sans);font-weight:700;font-size:.9rem;letter-spacing:.04em;
+    padding:14px 26px;cursor:pointer;transition:background .15s,color .15s;
+  }
+  .more-btn:hover{background:var(--ink);color:#fff}
+
   .home .hero-q{
     font-weight:900;font-size:clamp(1.7rem,6vw,2.15rem);line-height:1.45;
     text-align:center;letter-spacing:.04em;
@@ -131,6 +141,17 @@
   }
   .dish:hover,.dish:focus-visible{border-color:var(--ink);background:var(--ink);color:var(--bg);outline:none}
 
+  .link-card{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;cursor:pointer;font-family:var(--sans);color:var(--ink);
+    font-weight:700;font-size:.95rem;text-align:left;margin-top:14px;
+    transition:border-color .12s,background .12s;
+  }
+  .link-card:hover{border-color:var(--ink);background:var(--surface)}
+  .link-card small{display:block;font-weight:400;font-size:.76rem;color:var(--ink-3);margin-top:4px;letter-spacing:.01em}
+  .link-card .arrow{color:var(--ink);font-weight:400;flex-shrink:0}
+
   /* ---------- 診断フロー ---------- */
   .back{
     background:none;border:none;color:var(--ink-3);font-size:.82rem;cursor:pointer;
@@ -141,6 +162,7 @@
   .q-eyebrow{font-size:.7rem;letter-spacing:.26em;color:var(--warn);margin-bottom:12px;font-weight:700}
   .q-text{font-weight:900;font-size:clamp(1.45rem,5vw,1.85rem);line-height:1.5;margin-bottom:10px;letter-spacing:.03em}
   .q-hint{font-size:.84rem;color:var(--ink-2);margin-bottom:26px}
+  .lead{font-size:.92rem;color:var(--ink-2);margin-bottom:26px;line-height:1.95}
   .choices{display:flex;flex-direction:column;gap:12px}
   .choice{
     background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
@@ -169,6 +191,17 @@
   .photo-card svg{display:block;width:100%;height:120px;object-fit:cover}
   .photo-card .pc-label{padding:13px 16px;font-size:.92rem;font-weight:700;display:flex;justify-content:space-between;align-items:center}
   .pc-photo-note{font-size:.7rem;color:var(--ink-3);padding:0 16px 12px}
+
+  /* ---------- 解説ページ（基礎・科学） ---------- */
+  .guide{display:flex;flex-direction:column;gap:14px;margin:8px 0 4px}
+  .guide .g-item{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;
+  }
+  .guide .g-item .g-k{font-size:.66rem;letter-spacing:.2em;color:var(--warn);font-weight:700;margin-bottom:7px}
+  .guide.sci .g-item .g-k{color:var(--safe)}
+  .guide .g-item h3{font-size:1rem;font-weight:900;margin-bottom:6px;letter-spacing:.02em;line-height:1.5}
+  .guide .g-item p{font-size:.86rem;color:var(--ink-2)}
 
   /* ---------- 結果 ---------- */
   .verdict{
@@ -273,8 +306,120 @@
     background:var(--warn-bg);border-left:2px solid var(--warn);
     padding:16px 18px;border-radius:0 10px 10px 0;margin-top:20px;
   }
-  .kotsu b{display:block;font-size:.68rem;letter-spacing:.22em;color:var(--warn);margin-bottom:5px;font-weight:700;text-transform:uppercase}
+  .kotsu b{display:block;font-size:.68rem;letter-spacing:.18em;color:var(--warn);margin-bottom:5px;font-weight:700}
   .kotsu p{font-size:.9rem;color:var(--ink-2)}
+
+  /* ---------- TANZO風 見出し ---------- */
+  .page-head{margin-bottom:22px}
+  .page-eyebrow{
+    display:inline-flex;align-items:center;gap:12px;
+    font-size:.7rem;letter-spacing:.3em;color:var(--ink-3);font-weight:500;
+    text-transform:uppercase;margin-bottom:16px;
+  }
+  .page-eyebrow::after{content:"";width:22px;height:2px;background:var(--ink-3)}
+  .page-title{
+    font-weight:900;font-size:clamp(1.7rem,6vw,2.1rem);line-height:1.4;letter-spacing:.04em;
+    border-left:4px solid var(--ink);padding-left:16px;
+  }
+
+  /* ---------- 初心者ステッパー（横並び） ---------- */
+  .stepper{display:flex;align-items:flex-start;margin:10px 0 26px}
+  .s-node{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer;
+    position:relative;background:none;border:none;font-family:var(--sans);padding:0;min-width:0;
+  }
+  .s-node:not(:last-child)::after{
+    content:"";position:absolute;top:20px;left:50%;width:100%;height:1px;background:var(--line);z-index:0;
+  }
+  .s-node.active:not(:last-child)::after,.s-node.done:not(:last-child)::after{background:var(--ink)}
+  .s-circle{
+    width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--bg);
+    display:flex;align-items:center;justify-content:center;position:relative;z-index:1;
+    transition:background .15s,border-color .15s;
+  }
+  .s-circle svg{width:22px;height:22px;stroke:var(--ink-2);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .s-node.done .s-circle{border-color:var(--ink)}
+  .s-node.done .s-circle svg{stroke:var(--ink)}
+  .s-node.active .s-circle{background:var(--ink);border-color:var(--ink)}
+  .s-node.active .s-circle svg{stroke:#fff}
+  .s-label{font-size:.72rem;color:var(--ink-3);font-weight:700;text-align:center;line-height:1.3;letter-spacing:.01em}
+  .s-node.active .s-label,.s-node.done .s-label{color:var(--ink)}
+
+  .s-detail{animation:fade .3s ease}
+  .s-d-head{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+  .s-d-icon{width:52px;height:52px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .s-d-icon svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .s-d-num{font-size:.62rem;letter-spacing:.18em;color:var(--ink-3);font-weight:700;margin-bottom:3px}
+  .s-d-head h2{font-weight:900;font-size:1.2rem;letter-spacing:.02em;line-height:1.4}
+  .s-d-lead{font-size:.86rem;color:var(--ink-2);margin-bottom:4px}
+  .s-detail .steps{margin:6px 0 0}
+  .s-nav{display:flex;justify-content:space-between;gap:12px;margin-top:20px}
+  .s-nav button{
+    flex:1;border:1px solid var(--line);background:var(--bg);border-radius:var(--radius);
+    padding:13px 10px;font-size:.84rem;font-weight:700;color:var(--ink);cursor:pointer;font-family:var(--sans);
+    transition:border-color .12s,background .12s;
+  }
+  .s-nav button:hover:not(:disabled){border-color:var(--ink);background:var(--surface)}
+  .s-nav button:disabled{opacity:.32;cursor:default}
+
+  /* フッ素との違い・関連リンク（詳細パネル内で再利用） */
+  .j-diff{
+    background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;
+    padding:13px 15px;margin-top:14px;
+  }
+  .j-diff b{display:block;font-size:.64rem;letter-spacing:.16em;color:var(--warn);font-weight:700;margin-bottom:5px}
+  .j-diff p{font-size:.83rem;color:var(--ink-2)}
+  .j-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+  .j-link{
+    border:1px solid var(--line);border-radius:999px;background:var(--bg);
+    padding:9px 15px;font-size:.8rem;font-weight:700;color:var(--ink);cursor:pointer;
+    font-family:var(--sans);transition:border-color .12s,background .12s;
+  }
+  .j-link:hover{border-color:var(--ink);background:var(--surface)}
+
+  /* ステップ見出し横のナビ矢印 */
+  .s-d-title{flex:1;min-width:0}
+  .s-d-nav{display:flex;gap:8px;flex-shrink:0}
+  .s-arrow{
+    width:34px;height:34px;border:1px solid var(--line);background:var(--bg);border-radius:50%;
+    color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;
+    font-family:var(--sans);padding:0;flex-shrink:0;transition:border-color .12s,background .12s;
+  }
+  .s-arrow svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .s-arrow:hover:not(:disabled){border-color:var(--ink);background:var(--surface)}
+  .s-arrow:disabled{opacity:.3;cursor:default}
+
+  /* feature（ホーム）ボタン横並び */
+  .feature-btns{display:flex;flex-wrap:wrap;gap:12px}
+
+  /* ---------- Q&A ---------- */
+  .qa-sub{font-size:.76rem;color:var(--ink-3);letter-spacing:.06em;margin:-8px 0 16px}
+  .faq-list{margin-bottom:14px}
+  .faq-wrap{margin-bottom:10px}
+  .faq-q{
+    width:100%;background:var(--surface);border:none;border-left:3px solid var(--ink);
+    border-radius:0 8px 8px 0;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;cursor:pointer;font-family:var(--sans);text-align:left;color:var(--ink);
+    font-size:.92rem;font-weight:500;line-height:1.55;transition:background .12s;
+  }
+  .faq-q:hover{background:var(--surface-2)}
+  .faq-q b{font-weight:900;margin-right:4px}
+  .faq-chev{flex-shrink:0;color:var(--ink-3);display:flex;transition:transform .2s ease}
+  .faq-chev svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .faq-wrap.open .faq-chev{transform:rotate(90deg);color:var(--ink)}
+  .faq-a{display:none;padding:14px 18px 2px}
+  .faq-wrap.open .faq-a{display:block;animation:fade .25s ease}
+  .faq-a p{font-size:.86rem;color:var(--ink-2);margin-bottom:10px}
+
+  /* ---------- SUPPORT TOP（全ページ下部） ---------- */
+  .top-link{
+    display:flex;align-items:center;justify-content:center;gap:14px;margin:44px auto 0;
+    background:none;border:none;cursor:pointer;font-family:var(--sans);
+    font-size:.7rem;font-weight:700;letter-spacing:.28em;color:var(--ink-3);padding:12px;
+    transition:color .12s;
+  }
+  .top-link::before,.top-link::after{content:"";width:24px;height:1px;background:var(--line)}
+  .top-link:hover{color:var(--ink)}
 
   footer{
     padding:24px 22px calc(24px + env(safe-area-inset-bottom));
@@ -292,7 +437,7 @@
 <body>
 <div class="app">
   <header>
-    <div class="brand">
+    <div class="brand" onclick="home()">
       <div class="logo-mark">TANZO</div>
       <div class="logo-sub">MADE IN JAPAN</div>
     </div>
@@ -312,7 +457,8 @@
 <script>
 /* =========================================================
    診断データ（管理画面ではこのJSONを編集する想定）
-   node種別: question / photo / result / dish / contact
+   node種別: question / photo / result / dish
+   特設ページ: home / basics / science / contact / done
 ========================================================= */
 const ICONS = {
   koge:'<svg viewBox="0 0 24 24"><circle cx="11" cy="13" r="7"/><path d="M18 13h4"/><circle cx="9" cy="12" r=".6" fill="currentColor"/><circle cx="13" cy="14" r=".6" fill="currentColor"/><circle cx="11" cy="16" r=".6" fill="currentColor"/></svg>',
@@ -350,26 +496,26 @@ const FLOW = {
       {label:'最近、焦げ付くようになった',sub:'以前は問題なかった',next:'koge_r_reset'}
     ]},
   koge_q2:{type:'question',eyebrow:'焦げ付く',depth:2,total:3,
-    q:'調理の前に「油返し」をしていますか？',
-    hint:'油返し＝予熱後に多めの油を全体になじませ、余分を戻す工程',
+    q:'予熱と油は足りていますか？',
+    hint:'鉄は「しっかり予熱して、油をなじませてから」が基本。強火のままだったり、油が少なめになっていませんか？',
     choices:[
-      {label:'している',next:'koge_r_yonetsu'},
-      {label:'していない・知らなかった',next:'koge_r_abura'}
+      {label:'予熱も油も十分だと思う',next:'koge_r_yonetsu'},
+      {label:'あまり意識していなかった',next:'koge_r_abura'}
     ]},
   koge_r_abura:{type:'result',depth:3,total:3,kind:'warn',eyebrow:'原因がわかりました',
-    title:'油返し不足が原因です',
-    desc:'鉄フライパンは油の膜で食材を守ります。毎回の油返しで、表面がコーティングのように働きます。',
+    title:'予熱と油が足りていません',
+    desc:'TANZOは油をなじませた状態でお届けするので、シーズニングや油返しといった面倒な下準備は要りません。くっつき・焦げ付きを防ぐコツは「しっかり予熱」「適量の油」「入れたら少し待つ」の3つだけです。',
     steps:[
-      ['中火で予熱する','フライパンから薄く煙が立つまで（約1〜2分）'],
-      ['油を大さじ3入れる','全体に回して鍋肌になじませる'],
-      ['余分な油を戻す','オイルポットへ。鍋肌がしっとり光ればOK'],
-      ['調理用の油を入れて調理開始','']
+      ['中火で1〜2分予熱する','水滴を落として、玉になってコロコロ転がれば適温'],
+      ['油を適量ひいて全体になじませる','「ちょっと多いかな」が適量。鍋肌まで回す'],
+      ['油が温まってから食材を入れる','入れたら10秒は動かさない。膜ができれば自然に動く']
     ],
-    video:'動画：油返しのやり方（45秒）',
-    prevent:['調理のたびに油返しをする','予熱は中火で。強火は焦げの原因','使用後はお湯とタワシで洗い、火にかけて乾燥']},
+    video:'動画：くっつかせない予熱と油（45秒）',
+    prevent:['予熱は中火・調理は弱火〜中火','油は気持ち多めに','強火は焦げと油の劣化の原因'],
+    link:{label:'なぜくっつくのか、仕組みを見る',next:'science'}},
   koge_r_yonetsu:{type:'result',depth:3,total:3,kind:'warn',eyebrow:'原因がわかりました',
     title:'予熱不足、または火力が強すぎます',
-    desc:'TANZOは熱伝導が高い鍛造鉄。一般の鉄フライパンより少ない火力で十分です。',
+    desc:'TANZOは熱伝導が高い鍛造鉄。一般の鉄フライパンより少ない火力で十分です。強火のクセがあると、表面だけ高温になり焦げやすくなります。',
     steps:[
       ['中火で1〜2分予熱','水滴を落として、玉になって転がれば適温'],
       ['調理は弱火〜中火で','強火は使わない。余熱で火が通ります'],
@@ -378,16 +524,16 @@ const FLOW = {
     video:'動画：水滴テストで適温を見極める（30秒）',
     prevent:['「予熱は中火・調理は弱火」を合言葉に','焦げそうなときは火を弱めるより一度外す']},
   koge_r_reset:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'原因がわかりました',
-    title:'古い油膜や焦げが炭化しています',
-    desc:'積み重なった焦げが表面に残ると、新しい焦げ付きを呼びます。一度リセットしましょう。鉄は何度でも再生できます。',
+    title:'古い油や焦げが炭化しています',
+    desc:'積み重なった焦げが表面に残ると、温度ムラができて新しい焦げ付きを呼びます。一度リセットしましょう。鉄は何度でも再生できます。',
     steps:[
       ['お湯を沸かして焦げをふやかす','水を1/3ほど入れ、5分沸騰させる'],
       ['タワシでこすり落とす','金属ヘラを使ってもOK。鉄は傷を恐れなくて大丈夫'],
       ['空焼きして完全に乾かす','中火で水気を飛ばす'],
-      ['油ならしをする','油大さじ3を全体になじませて完了']
+      ['薄く油を塗ってなじませる','キッチンペーパーで全体にうすくのばして完了']
     ],
     video:'動画：焦げのリセット方法（1分20秒）',
-    prevent:['使用後は汚れをためずその日のうちに洗う','月1回の油ならしで表面を育てる']},
+    prevent:['使用後は汚れをためず、その日のうちに洗う','洗ったら火にかけて乾かし、薄く油を塗る']},
 
   /* ---- くっつく ---- */
   kuttsuku_q1:{type:'question',eyebrow:'くっつく',depth:1,total:2,
@@ -395,15 +541,16 @@ const FLOW = {
     choices:[
       {label:'卵・チャーハン',next:'kuttsuku_r_tamago'},
       {label:'肉・魚',next:'kuttsuku_r_niku'},
+      {label:'ごはん（炊飯）',sub:'炊いたあと底に貼りつく',next:'dish_gohan'},
       {label:'餃子',next:'dish_gyoza'},
       {label:'なんでもくっつく',next:'koge_r_abura'}
     ]},
   kuttsuku_r_tamago:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'原因がわかりました',
     title:'温度と油が足りていません',
-    desc:'卵やご飯は、温度が低いと鉄の表面に張り付きます。「しっかり予熱・油やや多め・入れたら少し待つ」が鉄則です。',
+    desc:'卵やご飯は、温度が低いと鉄の表面に張り付きます（熱凝着）。「しっかり予熱・油やや多め・入れたら少し待つ」が鉄則です。',
     steps:[
       ['中火でしっかり予熱','水滴がコロコロ転がる温度まで'],
-      ['油返しをしてから油を多めに','卵料理は油が命'],
+      ['油を多めにひいてなじませる','卵料理は油が命。鍋肌まで回す'],
       ['食材を入れたら10秒待つ','すぐ動かすと張り付きます。膜ができれば自然に動く']
     ],
     video:'動画：くっつかない卵焼きの火入れ（50秒）',
@@ -411,14 +558,15 @@ const FLOW = {
     link:{label:'卵料理ガイドを見る',next:'dish_tamago'}},
   kuttsuku_r_niku:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'原因がわかりました',
     title:'動かすのが早すぎます',
-    desc:'肉や魚は焼き始めに一度フライパンに付き、焼き面が固まると自然に剥がれます。剥がれるまで待つのがコツです。',
+    desc:'肉や魚は焼き始めに一度フライパンに付き、焼き面が固まると自然に剥がれます（くっつきの科学を参照）。剥がれるまで待つのがコツです。',
     steps:[
-      ['予熱と油返しをする','中火1〜2分＋油返し'],
+      ['予熱して油をひく','中火で1〜2分予熱し、油を全体になじませる'],
       ['食材を置いたら触らない','1分半〜2分。動かしたくなっても我慢'],
       ['自然に剥がれたら裏返す','フライパンを揺すって動けばOKのサイン']
     ],
     video:'動画：肉が剥がれる瞬間の見極め（40秒）',
-    prevent:['食材は常温に戻し、水気をふき取ってから','詰め込みすぎると温度が下がりくっつきます']},
+    prevent:['食材は常温に戻し、水気をふき取ってから','詰め込みすぎると温度が下がりくっつきます'],
+    link:{label:'なぜ「待つ」と剥がれるのか',next:'science'}},
 
   /* ---- サビ（写真診断） ---- */
   sabi_q1:{type:'photo',eyebrow:'サビが出た',depth:1,total:2,
@@ -444,14 +592,14 @@ const FLOW = {
     steps:[
       ['金タワシ＋クレンザーで削り落とす','地金（銀色）が見えるまでしっかり'],
       ['よく洗い流して空焼き','中火〜強めの中火で水分を完全に飛ばす'],
-      ['油ならしをする','油大さじ3を全体になじませ、冷めたら拭き取る'],
-      ['くず野菜を炒める','鉄のにおいが取れ、油膜が定着します']
+      ['油を塗ってなじませる','油を全体にうすく塗り、冷めたら拭き取る'],
+      ['くず野菜を炒める','鉄のにおいが取れ、油がよくなじみます']
     ],
     video:'動画：サビたフライパンの完全再生（2分10秒）',
     prevent:['使用後の自然乾燥に頼らず、必ず火にかける','長期保管は油を厚めに塗り、紙に包む']},
   sabi_r_normal:{type:'result',depth:2,total:2,kind:'normal',eyebrow:'ご安心ください',
     title:'それはサビではなく「育った証」です',
-    desc:'黒い斑点や黒ずみは、油膜と酸化被膜が育ってできるもの。鉄フライパンが使いやすくなっているサインで、調理にも健康にも問題ありません。',
+    desc:'黒い斑点や黒ずみは、油と酸化被膜が育ってできるもの。鉄フライパンが使いやすくなっているサインで、調理にも健康にも問題ありません。',
     steps:[
       ['そのまま使い続けてOK','黒ずみは焦げ付きにくさの素'],
       ['気になる場合だけタワシでこする','無理に落とす必要はありません']
@@ -474,27 +622,27 @@ const FLOW = {
     video:'動画：鉄の色が変わる理由（50秒）',
     prevent:['色ムラは個性。気にせず使い込んでください']},
   henshoku_r_white:{type:'result',depth:2,total:2,kind:'warn',eyebrow:'お手入れのサインです',
-    title:'油膜が落ちています',
-    desc:'洗剤での洗いすぎや空焼きのしすぎで油膜が薄くなった状態。油ならしで戻ります。',
+    title:'表面の油気が落ちています',
+    desc:'TANZOはシーズニング不要ですが、洗ったあとに油をなじませずにいると、表面の油気が落ちて一時的に白っぽく、くっつきやすくなることがあります。油をなじませれば元に戻ります。',
     steps:[
       ['中火で予熱する',''],
-      ['油大さじ3を全体になじませる','鍋肌までしっかり'],
-      ['火を止めて冷まし、油を拭き取る','']
+      ['油を適量ひいて全体になじませる','鍋肌までしっかり'],
+      ['火を止めて冷まし、余分な油を拭き取る','']
     ],
-    video:'動画：油ならしのやり方（1分）',
-    prevent:['ふだんの洗いはお湯とタワシで（洗剤は基本不要）','洗剤を使ったら油ならしをセットで']},
+    video:'動画：油のなじませ方（1分）',
+    prevent:['洗剤で洗ってOK。洗ったら火にかけて乾かす','仕上げに薄く油をなじませておく']},
 
   /* ---- 直接回答系 ---- */
   arai_r:{type:'result',depth:1,total:1,kind:'normal',eyebrow:'お手入れの基本',
-    title:'お湯とタワシで洗い、火にかけて乾かす',
-    desc:'洗剤は基本不要です。油膜は鉄フライパンの味方なので、落としすぎないのがコツです。',
+    title:'洗剤で洗ってOK。火にかけて乾かす',
+    desc:'TANZOは扱いやすく、洗剤で洗ってもOK（むしろ推奨）です。洗ったあと火にかけて乾かすことだけ守れば、サビ知らずで使えます。',
     steps:[
-      ['調理後、温かいうちにお湯で洗う','タワシやササラでこする。洗剤は使わない'],
-      ['火にかけて水気を完全に飛ばす','中火で30秒〜1分'],
+      ['調理後、温かいうちに洗う','スポンジやタワシで。洗剤を使ってOK（推奨）'],
+      ['火にかけて水気を完全に飛ばす','中火で30秒〜1分、しっかり乾燥'],
       ['薄く油を塗って保管','キッチンペーパーでうすくのばす']
     ],
     video:'動画：毎日のお手入れ 3ステップ（55秒）',
-    prevent:['食洗機・つけ置きはNG（サビの原因）','におい移りが気になるときだけ洗剤OK。その後は油ならしを']},
+    prevent:['食洗機・つけ置きはNG（サビの原因）','洗ったら必ず火にかけて乾かす']},
   hokan_r:{type:'result',depth:1,total:1,kind:'normal',eyebrow:'保管の基本',
     title:'「完全乾燥＋薄く油」で保管します',
     desc:'サビの原因は水分と湿気だけ。この2つを断てば、何年でも良い状態を保てます。',
@@ -504,7 +652,7 @@ const FLOW = {
       ['湿気の少ない場所へ','シンク下に置く場合は新聞紙や紙で包む']
     ],
     video:'動画：正しい保管方法（40秒）',
-    prevent:['長期間使わないときは油を厚めに塗り、紙に包む','久しぶりに使う前は油返しから']},
+    prevent:['長期間使わないときは油を厚めに塗り、紙に包む','久しぶりに使う前は、油をなじませてから']},
   hikagen_r:{type:'result',depth:1,total:1,kind:'normal',eyebrow:'火加減の基本',
     title:'予熱は中火、調理は弱火〜中火',
     desc:'TANZOは鍛造ならではの高い熱伝導と保温力があります。一般の鉄フライパンより弱い火で、十分に火が通ります。',
@@ -525,13 +673,14 @@ const FLOW = {
       {label:'ハンバーグ',next:'dish_hamburg'},
       {label:'餃子',next:'dish_gyoza'},
       {label:'チャーハン',next:'dish_chahan'},
-      {label:'野菜炒め',next:'dish_yasai'}
+      {label:'野菜炒め',next:'dish_yasai'},
+      {label:'ごはん（炊飯）',next:'dish_gohan'}
     ]},
 
   /* ---- 料理別ガイド ---- */
   dish_tamago:{type:'dish',name:'卵料理',fire:'予熱：中火 → 調理：弱火',
     steps:[
-      ['中火で予熱＋油返し','卵は温度が命。ここを省くとくっつきます'],
+      ['中火で予熱して油をなじませる','卵は温度が命。予熱を省くとくっつきます'],
       ['油を多めにひき、弱火に落とす','油の表面が静かに波打つくらい'],
       ['卵を入れて10秒待つ','膜ができたら自然に動きます']
     ],
@@ -540,7 +689,7 @@ const FLOW = {
   dish_steak:{type:'dish',name:'ステーキ',fire:'予熱：強めの中火 → 調理：中火＋余熱',
     steps:[
       ['肉を常温に戻し、水気をふく','冷たいままだと温度が落ちて張り付きます'],
-      ['しっかり予熱して油返し','煙が薄く立つまで'],
+      ['しっかり予熱して油をひく','薄く煙が立つまで予熱してから油を回す'],
       ['置いたら1分半、触らない','自然に剥がれたら裏返すサイン'],
       ['火を止めて余熱で休ませる','鍛造鉄の保温力で中までジューシーに']
     ],
@@ -548,7 +697,7 @@ const FLOW = {
     video:'動画：鍛造フライパンでステーキ（1分30秒）'},
   dish_hamburg:{type:'dish',name:'ハンバーグ',fire:'焼き色：中火 → 蒸し焼き：弱火',
     steps:[
-      ['中火＋油返しで両面に焼き色','片面2分ずつ、動かさない'],
+      ['中火で油をひき、両面に焼き色','片面2分ずつ、動かさない'],
       ['弱火にしてガラス蓋をする','密着する蓋で蒸気を閉じ込めて5〜6分'],
       ['竹串で透明な肉汁を確認','余熱で1〜2分休ませて完成']
     ],
@@ -556,7 +705,7 @@ const FLOW = {
     video:'動画：蓋を活かしたハンバーグ（1分20秒）'},
   dish_gyoza:{type:'dish',name:'餃子',fire:'予熱：中火 → 蒸し：弱火 → 仕上げ：中火',
     steps:[
-      ['中火で予熱＋油返し','ここを省くと皮が張り付きます'],
+      ['中火で予熱して油をひく','予熱を省くと皮が張り付きます'],
       ['餃子を並べ、すぐ熱湯を注ぐ','底から1/3の高さまで。蓋をして弱火'],
       ['水気が飛んだら油を回しかけ','中火に上げて、底をカリッと'],
       ['ヘラで底からはがす','鉄は金属ヘラOK。一気にいきましょう']
@@ -565,7 +714,7 @@ const FLOW = {
     video:'動画：羽根つき餃子の焼き方（1分40秒）'},
   dish_chahan:{type:'dish',name:'チャーハン',fire:'予熱：しっかり → 調理：強めの中火・短時間',
     steps:[
-      ['しっかり予熱＋油返し','チャーハンだけは高温で'],
+      ['しっかり予熱して油をひく','チャーハンだけは高温で'],
       ['油多め→卵→すぐご飯','温かいご飯を使うのがパラパラへの近道'],
       ['あおらず、広げて焼く','ヘラで切るように混ぜ、お米を鍋肌に当てる']
     ],
@@ -574,11 +723,20 @@ const FLOW = {
   dish_yasai:{type:'dish',name:'野菜炒め',fire:'予熱：中火 → 調理：強めの中火・短時間',
     steps:[
       ['野菜の水気をよく切る','水分は「べちゃっ」の最大の原因'],
-      ['予熱＋油返しのあと、一気に炒める','火の通りにくいものから順に'],
+      ['予熱して油をひいたあと、一気に炒める','火の通りにくいものから順に'],
       ['詰め込みすぎない','フライパンの2/3まで。多いときは2回に分ける']
     ],
     kotsu:'蓄熱が高いTANZOは食材を入れても温度が落ちにくく、シャキッと仕上がります。',
-    video:'動画：シャキシャキ野菜炒め（1分）'}
+    video:'動画：シャキシャキ野菜炒め（1分）'},
+  dish_gohan:{type:'dish',name:'ごはん（炊飯）',fire:'浸水 → 中火で沸騰 → 弱火 → 蒸らし',
+    steps:[
+      ['米を洗い、30分以上しっかり浸水','芯まで給水させると、デンプンが均一に火を受け、底に貼りつきにくくなります'],
+      ['底にうすく油を塗る（こびりつき対策）','気になる人向け。米1合に小さじ1/2ほどの油を加える方法も有効'],
+      ['蓋をして中火、沸騰したら弱火で12〜15分','TANZOの蓄熱で、土鍋に近いふっくら感に'],
+      ['火を止めて10分蒸らし、すぐ底から大きくかえす','蒸らしっぱなしにせず、早めにほぐすのがこびりつき防止のコツ']
+    ],
+    kotsu:'底にお米が貼りつくのは、デンプンが金属と密着する「熱凝着」が原因。万一こびりついても、お湯を張って数分おけばふやけて簡単に取れます。こすり洗いは不要です。',
+    video:'動画：鉄フライパンでごはんを炊く（2分）'}
 };
 
 const SYMPTOMS = [
@@ -593,7 +751,83 @@ const SYMPTOMS = [
 ];
 const DISHES = [
   ['卵料理','dish_tamago'],['ステーキ','dish_steak'],['ハンバーグ','dish_hamburg'],
-  ['餃子','dish_gyoza'],['チャーハン','dish_chahan'],['野菜炒め','dish_yasai']
+  ['餃子','dish_gyoza'],['チャーハン','dish_chahan'],['野菜炒め','dish_yasai'],
+  ['ごはん','dish_gohan']
+];
+
+/* 初心者ジャーニー用アイコン */
+const JICONS = {
+  box:'<svg viewBox="0 0 24 24"><path d="M3.5 7.5 L12 3 L20.5 7.5 V16.5 L12 21 L3.5 16.5 Z"/><path d="M3.5 7.5 L12 12 L20.5 7.5 M12 12 V21"/></svg>',
+  fire:'<svg viewBox="0 0 24 24"><path d="M12 3 C9 8 7 9.5 7 13.5 a5 5 0 0 0 10 0 C17 9.5 15 8 12 3z"/><path d="M12 12.5 c-1.1 1.3-1.7 2-1.7 3.1a1.7 1.7 0 0 0 3.4 0 c0-1.1-.6-1.8-1.7-3.1z"/></svg>',
+  cook:'<svg viewBox="0 0 24 24"><circle cx="10" cy="14" r="6"/><path d="M16 14 H21.5"/><path d="M10 3.5 V8 M8.4 3.5 H11.6"/></svg>',
+  wash:'<svg viewBox="0 0 24 24"><path d="M3.5 14.5 q4.2 -3 8.5 0 t8.5 0"/><path d="M3.5 18.5 q4.2 -3 8.5 0 t8.5 0"/><circle cx="9" cy="7" r="1.6"/><circle cx="14.5" cy="5" r="1.1"/></svg>',
+  store:'<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 12 H20 M10.5 8 H13.5 M10.5 16 H13.5"/></svg>'
+};
+
+/* 購入日 → 調理 → 保管 の流れ（各ステップは展開式） */
+const JOURNEY = [
+  {ic:'box',num:'STEP 01',short:'届いた',t:'届いたその日',lead:'箱から出して、すぐ使えます。',
+    steps:[
+      ['さっと洗って水気をふく','工場で油をなじませた状態（シーズニング済み）で届きます'],
+      ['そのまま調理を始めてOK','最初の焼き込みや油の塗り込みは不要です']
+    ],
+    diff:'フッ素加工と同じく「買ってすぐ使える」のは同じ。違うのは、使うほど油がなじんで“育つ”こと。コーティングの寿命がなく、一生モノです。',
+    links:[]},
+  {ic:'fire',num:'STEP 02',short:'準備',t:'調理の準備（予熱と油）',lead:'鉄は「予熱」「油」「火加減」で決まります。',
+    steps:[
+      ['予熱は中火で1〜2分','水滴を落として、玉になって転がれば適温'],
+      ['油を適量ひいてなじませる','「ちょっと多いかな」が適量。鍋肌まで回す'],
+      ['調理は弱火〜中火で','鍛造の蓄熱で、強火がなくても火が通ります'],
+      ['仕上げは余熱を使う','火を止めても熱が続くので、余熱で火入れを']
+    ],
+    diff:'フッ素加工は空焚き・強い予熱がNG（コーティングが傷みます）。鉄はむしろ、しっかり予熱してこそ力を発揮します。',
+    links:[['なぜくっつくの？','science']]},
+  {ic:'cook',num:'STEP 03',short:'調理',t:'焼く・炒める（調理）',lead:'弱火〜中火と余熱で、じっくり。',
+    steps:[
+      ['入れたら動かさず待つ','焼き面が固まると、自然にスッと剥がれます'],
+      ['焼き目がついたら返す','鉄は金属ヘラOK。高温で香ばしく焼けます']
+    ],
+    diff:'フッ素加工は中火まで・金属ヘラはNG。鉄は高温で香ばしい焼き目が出せて、金属ヘラも使えます。',
+    links:[['料理別ガイドを見る','dishes'],['くっつく・焦げを解決','kuttsuku_q1']]},
+  {ic:'wash',num:'STEP 04',short:'洗う',t:'洗う（お手入れ）',lead:'洗剤で洗ってOK。仕上げに火で乾かすだけ。',
+    steps:[
+      ['調理後、温かいうちに洗う','スポンジやタワシで。洗剤を使ってOK（推奨）'],
+      ['火にかけて水気を完全に飛ばす','中火で30秒〜1分、しっかり乾燥させる'],
+      ['薄く油を塗って保管','キッチンペーパーでうすくのばす']
+    ],
+    diff:'フッ素加工はやわらかいスポンジが基本。TANZOはタワシでこすってもOK、洗剤で洗っても問題ありません。違いは「洗ったあと火にかけて乾かす」ことだけです。',
+    links:[['サビが出たときは','sabi_q1']]},
+  {ic:'store',num:'STEP 05',short:'しまう',t:'しまう（保管）',lead:'「乾燥＋薄く油」でサビ知らず。',
+    steps:[
+      ['完全に乾かす','自然乾燥に頼らず、必ず火にかけて'],
+      ['薄く油を塗って保管','湿気の少ない場所へ。長期保管は紙に包む']
+    ],
+    diff:'フッ素加工はそのまま重ねて収納できます。鉄は薄く油を塗り、湿気を避けるのがポイント。これだけで一生使えます。',
+    links:[['保管の詳細','hokan_r']]}
+];
+
+const FAQ = [
+  {q:'焦げ付いてしまったら？',
+   a:'お湯を1/3ほど入れて5分ほど沸かし、焦げをふやかしてからタワシでこすり落とせばOK。鉄は金属ヘラで削っても大丈夫で、何度でも元に戻せます。',
+   link:['焦げ付きを診断する','koge_q1']},
+  {q:'くっつくのはなぜ？ どうすれば防げる？',
+   a:'食材のタンパク質が金属と結びつく「熱凝着」が主な原因です。「しっかり予熱・適量の油・入れたら動かさず待つ」の3つで防げます。',
+   link:['くっつく仕組みを見る','science']},
+  {q:'ごはんは炊けますか？',
+   a:'炊けます。浸水をしっかりして、底にうすく油を塗っておくとこびりつきにくくなります。炊き上がりは蒸らしすぎず、早めに底からかえすのがコツです。',
+   link:['ごはんの炊き方を見る','dish_gohan']},
+  {q:'つくった料理が余ったら、翌日まで入れたままでいい？',
+   a:'おすすめしません。塩分や酸を含む料理を長時間入れたままにすると、サビの原因になります。食べ終わったら別の器に移し、フライパンは洗って乾かしてください。',
+   link:null},
+  {q:'ステーキを焼いた後、フライパンの上でナイフを使ってもいい？',
+   a:'大丈夫です。鉄は金属に強く、金属ヘラやナイフで傷を気にする必要はありません。取っ手を外せば木製プレートに移して、そのまま食卓にも出せます。',
+   link:['ステーキガイドを見る','dish_steak']},
+  {q:'もし錆びたときはどうしたらいい？',
+   a:'軽いサビはタワシでこすって油を塗れば復活します。広がったサビも、削って油をなじませ直せば新品同様に。買い替えは不要です。',
+   link:['サビを診断する','sabi_q1']},
+  {q:'洗剤で洗ってもいい？',
+   a:'はい、TANZOは洗剤で洗ってOKです（むしろ推奨）。洗ったあとは火にかけて水気を飛ばし、薄く油を塗っておけばサビ知らずです。',
+   link:null}
 ];
 
 /* ====================== 画面制御 ====================== */
@@ -602,6 +836,7 @@ const forge=document.getElementById('forge');
 const heat=document.getElementById('forgeHeat');
 let history=[];
 let currentSymptom='';
+let basicsStep=0;
 
 function setHeat(depth,total){
   forge.classList.add('show');
@@ -612,10 +847,14 @@ function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
 
 function go(id,push=true){
   if(push)history.push(id);
-  const node=FLOW[id];
   if(id==='home')return renderHome();
+  if(id==='basics'){if(push)basicsStep=0;return renderBasics();}
+  if(id==='science')return renderScience();
+  if(id==='dishes')return renderDishes();
+  if(id==='faq')return renderFaq();
   if(id==='contact')return renderContact();
   if(id==='done')return renderDone();
+  const node=FLOW[id];
   if(node.type==='question')return renderQuestion(node);
   if(node.type==='photo')return renderPhoto(node);
   if(node.type==='result')return renderResult(node);
@@ -635,6 +874,15 @@ function renderHome(){
   hideHeat();
   main.innerHTML=`
   <div class="fade home">
+    <div class="feature">
+      <p class="page-eyebrow">はじめての方へ</p>
+      <h2 class="page-title">鉄、こわくありません</h2>
+      <p class="lead">シーズニングも油返しも不要。届いたその日から使える、いちばんやさしい鉄の使い方ガイドです。</p>
+      <div class="feature-btns">
+        <button class="more-btn" onclick="startFlow('basics','はじめての鉄ガイド')">使い方を見る →</button>
+        <button class="more-btn" onclick="startFlow('science','くっつく仕組み')">なぜ、くっつくの？ →</button>
+      </div>
+    </div>
     <p class="eyebrow center">TANZO SUPPORT</p>
     <h1 class="hero-q">どうされましたか？</h1>
     <p class="hero-sub">困りごとを選ぶだけ。平均3分で解決へご案内します。</p>
@@ -645,6 +893,12 @@ function renderHome(){
           <span class="name">${s.name}</span>
         </button>`).join('')}
     </div>
+    <h2 class="sec-title">Q&amp;A</h2>
+    <p class="qa-sub">こんな時どうする？</p>
+    <div class="faq-list">
+      ${FAQ.slice(0,3).map((f,i)=>faqItem(f,i)).join('')}
+    </div>
+    <button class="more-btn" onclick="startFlow('faq','よくある質問')">Q&amp;Aをすべて見る →</button>
     <h2 class="sec-title">料理別ガイド</h2>
     <div class="dish-row">
       ${DISHES.map(d=>`<button class="dish" onclick="startFlow('${d[1]}','料理別ガイド')">${d[0]}</button>`).join('')}
@@ -720,6 +974,7 @@ function renderResult(n){
       <button class="btn btn-ok" onclick="go('done');window.scrollTo(0,0)">解決した！</button>
       <button class="btn btn-ng" onclick="go('contact');window.scrollTo(0,0)">解決しなかった</button>
     </div>
+    ${topBtn()}
   </div>`;
 }
 
@@ -744,6 +999,103 @@ function renderDish(n){
       <button class="btn btn-ok" onclick="go('done');window.scrollTo(0,0)">参考になった！</button>
       <button class="btn btn-ng" onclick="go('contact');window.scrollTo(0,0)">解決しなかった</button>
     </div>
+    ${topBtn()}
+  </div>`;
+}
+
+/* ---- はじめての鉄（横ステッパー／タブ式） ---- */
+function selectStep(i){
+  if(i<0||i>=JOURNEY.length)return;
+  basicsStep=i;
+  renderBasics();
+}
+function renderBasics(){
+  hideHeat();
+  const j=JOURNEY[basicsStep];
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <div class="page-head">
+      <p class="page-eyebrow">For Beginners</p>
+      <h1 class="page-title">鉄、こわくありません</h1>
+    </div>
+    <p class="lead">フッ素加工（テフロン）しか使ったことがなくても大丈夫。TANZOはシーズニングも油返しも不要で、届いたその日から使えます。下の流れを順にタップして、買った日から調理・お手入れ・保管まで、やることと「フッ素加工との違い」を確認してください。</p>
+    <div class="stepper">
+      ${JOURNEY.map((s,i)=>`
+        <button class="s-node ${i===basicsStep?'active':(i<basicsStep?'done':'')}" onclick="selectStep(${i})">
+          <span class="s-circle">${JICONS[s.ic]}</span>
+          <span class="s-label">${s.short}</span>
+        </button>`).join('')}
+    </div>
+    <div class="s-detail">
+      <div class="s-d-head">
+        <div class="s-d-icon">${JICONS[j.ic]}</div>
+        <div class="s-d-title">
+          <div class="s-d-num">${j.num}</div>
+          <h2>${j.t}</h2>
+        </div>
+        <div class="s-d-nav">
+          <button class="s-arrow" onclick="selectStep(${basicsStep-1})" ${basicsStep===0?'disabled':''} aria-label="前のステップ"><svg viewBox="0 0 24 24"><path d="M14 6 l-6 6 l6 6"/></svg></button>
+          <button class="s-arrow" onclick="selectStep(${basicsStep+1})" ${basicsStep===JOURNEY.length-1?'disabled':''} aria-label="次のステップ"><svg viewBox="0 0 24 24"><path d="M10 6 l6 6 l-6 6"/></svg></button>
+        </div>
+      </div>
+      <p class="s-d-lead">${j.lead}</p>
+      <div class="steps">
+        ${j.steps.map(s=>`<div class="step"><div><b>${s[0]}</b>${s[1]?`<span>${s[1]}</span>`:''}</div></div>`).join('')}
+      </div>
+      <div class="prevent">
+        <h3>フッ素加工との違い</h3>
+        <ul><li>${j.diff}</li></ul>
+      </div>
+      ${j.links&&j.links.length?`<div class="j-links">${j.links.map(l=>`<button class="j-link" onclick="go('${l[1]}');window.scrollTo(0,0)">${l[0]} →</button>`).join('')}</div>`:''}
+    </div>
+    ${topBtn()}
+  </div>`;
+}
+
+/* ---- 料理別ガイド（一覧） ---- */
+function renderDishes(){
+  hideHeat();
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <div class="page-head">
+      <p class="page-eyebrow">Recipe Guide</p>
+      <h1 class="page-title">料理別ガイド</h1>
+    </div>
+    <p class="lead">作りたい料理を選ぶと、TANZOでの火加減・手順・コツがわかります。</p>
+    <div class="dish-row">
+      ${DISHES.map(d=>`<button class="dish" onclick="go('${d[1]}');window.scrollTo(0,0)">${d[0]}</button>`).join('')}
+    </div>
+    ${topBtn()}
+  </div>`;
+}
+
+/* ---- なぜくっつく・こびりつくの？（科学ページ） ---- */
+function renderScience(){
+  hideHeat();
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <div class="page-head">
+      <p class="page-eyebrow">Why It Sticks</p>
+      <h1 class="page-title">なぜ、くっついてしまうの？</h1>
+    </div>
+    <p class="lead">くっつきは、あなたの腕のせいでも、フライパンの欠陥でもありません。鉄と食材のあいだで起こる、理由のある現象です。仕組みがわかれば、防ぎ方も見えてきます。</p>
+    <div class="guide sci">
+      <div class="g-item"><div class="g-k">仕組み 01</div><h3>表面の見えない凸凹</h3><p>鉄の表面を顕微鏡で見ると、目に見えない細かな凸凹があります。食材が固まると、この凸凹に入り込んでしがみつきます。油はこの凸凹を埋めて、食材がすべる“下じき”をつくる役割をします。</p></div>
+      <div class="g-item"><div class="g-k">仕組み 02</div><h3>タンパク質と金属がくっつく「熱凝着」</h3><p>卵・肉・魚・ごはんに含まれるタンパク質は、約50℃以上になると金属イオンと反応し、表面に吸着・結合します。これが「熱凝着（ねつぎょうちゃく）」。中途半端な温度で食材を入れると、この結合がいちばん強く起きてしまいます。</p></div>
+      <div class="g-item"><div class="g-k">仕組み 03</div><h3>水分と予熱不足の罠</h3><p>フライパンに水分が残っていたり予熱が足りなかったりすると、表面温度が上がりきらず、熱凝着が起きやすい温度帯に長くとどまります。だから「しっかり予熱」がいちばん効くのです。</p></div>
+    </div>
+    <h2 class="sec-title">だから、防ぐコツは3つ</h2>
+    <div class="steps">
+      <div class="step"><div><b>しっかり予熱する</b><span>水滴を落としてコロコロ転がれば適温（ライデンフロスト効果が目安）</span></div></div>
+      <div class="step"><div><b>油でバリアを作る</b><span>表面の凸凹を埋め、食材と金属の直接接触を防ぐ</span></div></div>
+      <div class="step"><div><b>入れたら動かさず待つ</b><span>いちばんのコツ。焼き面が固まると食材同士の結合が勝り、自然にスッと剥がれます。慌てて動かすのが最大の失敗</span></div></div>
+    </div>
+    <div class="kotsu"><b>お米が底にくっつくのも、同じ理由</b><p>ごはんが底に貼りつくのも熱凝着です。お米のデンプンとタンパク質が、炊いている間に底の金属と密着します（おこげになる手前の状態）。炊く前にしっかり浸水させ、底にうすく油を塗っておくと防げます。炊き上がったら蒸らしすぎず、すぐ底から大きくかえすのがコツ。貼りついても、お湯を張って数分おけばふやけて簡単に取れます。</p></div>
+    <button class="btn btn-ng btn-wide" onclick="go('dishes');window.scrollTo(0,0)">料理別ガイドを見る →</button>
+    ${topBtn()}
   </div>`;
 }
 
@@ -781,12 +1133,47 @@ function renderContact(){
       </div>
       <div class="field">
         <label>状況を教えてください（任意）</label>
-        <textarea placeholder="例：油返しをしても卵がくっつきます"></textarea>
+        <textarea placeholder="例：予熱しても卵がくっついてしまいます"></textarea>
       </div>
       <button class="attach" type="button">＋ フライパンの写真を添付（タップで撮影）</button>
       <button class="btn btn-ok btn-wide" type="button" onclick="alert('プロトタイプのため送信されません。本番ではここで送信→自動返信メール。')">送信する</button>
       <p class="note">2営業日以内にメールでご返信します。診断履歴（${history.filter(h=>h!=='home').length}ステップ）が問い合わせに添付されるため、状況説明の手間が省けます。</p>
     </div>
+    ${topBtn()}
+  </div>`;
+}
+
+/* ---- 共通：SUPPORT TOP ---- */
+function topBtn(){return `<button class="top-link" onclick="home()">SUPPORT TOP</button>`;}
+
+/* ---- Q&A ---- */
+function toggleFaq(btn){btn.closest('.faq-wrap').classList.toggle('open');}
+function faqItem(f,i){
+  return `<div class="faq-wrap">
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span><b>Q${i+1}.</b> ${f.q}</span>
+      <span class="faq-chev"><svg viewBox="0 0 24 24"><path d="M9 6 l6 6 l-6 6"/></svg></span>
+    </button>
+    <div class="faq-a">
+      <p>${f.a}</p>
+      ${f.link?`<button class="j-link" onclick="go('${f.link[1]}');window.scrollTo(0,0)">${f.link[0]} →</button>`:''}
+    </div>
+  </div>`;
+}
+function renderFaq(){
+  hideHeat();
+  main.innerHTML=`
+  <div class="fade">
+    ${backBtn()}
+    <div class="page-head">
+      <p class="page-eyebrow">Q&amp;A</p>
+      <h1 class="page-title">よくあるご質問</h1>
+    </div>
+    <p class="lead">こんな時どうする？ よくいただく質問をまとめました。気になる質問をタップしてください。</p>
+    <div class="faq-list">
+      ${FAQ.map((f,i)=>faqItem(f,i)).join('')}
+    </div>
+    ${topBtn()}
   </div>`;
 }
 
